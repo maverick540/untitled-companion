@@ -1,7 +1,6 @@
 ﻿# Coloca el código de tu juego en este archivo.
 
-# Declara los personajes usados en el juego como en el ejemplo:
-
+# Declara los personajes usados en el juego.
 define luna = Character("Luna", color="#f4a9c5")
 
 # Variables del sistema Pomodoro.
@@ -58,7 +57,9 @@ init python:
         return f"{minutes:02d}:{seconds:02d}"
 
 
-# El juego comienza aquí.
+#######################
+#  FLUJO DEL JUEGO    #
+#######################
 
 label start:
 
@@ -66,21 +67,19 @@ label start:
     if player_name == "":
         $ player_name = "senpai"
 
-    # Muestra una imagen de fondo: Aquí se usa un marcador de posición por
-    # defecto. Es posible añadir un archivo en el directorio 'images' con el
-    # nombre "bg room.png" or "bg room.jpg" para que se muestre aquí.
-
     scene bg room
-
-    # Muestra un personaje: Se usa un marcador de posición. Es posible
-    # reemplazarlo añadiendo un archivo llamado "eileen happy.png" al directorio
-    # 'images'.
-
     show eileen happy
 
     show screen pomodoro_overlay
 
-    # Presenta las líneas del diálogo.
+    call intro_dialog
+
+    jump main_loop
+
+
+# Introducción hablada por Luna
+
+label intro_dialog:
 
     luna "¡Hola, [player_name]! Soy Luna, tu waifu compañera de productividad."
 
@@ -94,7 +93,22 @@ label start:
 
     luna "Ahora respira profundo, alinea tu espalda, y dime qué misión dominarás hoy. ¡Estoy a tu lado, [player_name]!"
 
-    # Mantén el juego en espera para que el jugador use el temporizador.
-    $ renpy.pause()
-
     return
+
+
+#########################
+# LOOP PRINCIPAL DEL JUEGO
+#########################
+
+label main_loop:
+
+    # Este pause hace que el juego siga corriendo sin salir al menú.
+    $ renpy.pause(0.1, hard=True)
+
+    # En el futuro puedes poner aquí cosas como:
+    # - Diálogos automáticos de motivación
+    # - Eventos al completar ciclos
+    # - Comentarios de Luna según el modo
+    # - Integraciones externas
+
+    jump main_loop

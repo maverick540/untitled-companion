@@ -203,7 +203,7 @@ screen pomodoro_overlay():
         has vbox
         spacing 6
 
-        text "Modo: ["Enfoque" if pomodoro_mode == 'focus' else "Descanso largo" if pomodoro_mode == 'long_break' else "Descanso corto"]" size 24
+        text "Modo: [ 'Enfoque' if pomodoro_mode == 'focus' else 'Descanso largo' if pomodoro_mode == 'long_break' else 'Descanso corto' ]" size 24
         text pomodoro_time_display() size 40 xalign 0.5
         text "Ciclos completados: [pomodoro_cycles]" size 18
 
