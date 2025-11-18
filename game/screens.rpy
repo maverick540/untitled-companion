@@ -196,6 +196,27 @@ style input:
     xmaximum gui.dialogue_width
 
 
+screen pomodoro_overlay():
+    zorder 100
+    frame:
+        align (0.95, 0.1)
+        has vbox
+        spacing 6
+
+        text "Modo: ["Enfoque" if pomodoro_mode == 'focus' else "Descanso largo" if pomodoro_mode == 'long_break' else "Descanso corto"]" size 24
+        text pomodoro_time_display() size 40 xalign 0.5
+        text "Ciclos completados: [pomodoro_cycles]" size 18
+
+        hbox:
+            spacing 8
+            textbutton ("Reanudar" if pomodoro_running else "Iniciar") action Function(pomodoro_toggle)
+            textbutton "Reiniciar" action Function(pomodoro_reset)
+            textbutton "Omitir" action Function(pomodoro_skip_phase)
+
+    if pomodoro_running:
+        timer 1.0 action Function(pomodoro_tick) repeat True
+
+
 ## Pantalla de menú ############################################################
 ##
 ## Esta pantallla presenta las opciones internas al juego de la sentencia
