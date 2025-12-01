@@ -198,23 +198,79 @@ style input:
 
 screen pomodoro_overlay():
     zorder 100
-    frame:
+    drag:
+        drag_name "pomodoro_panel"
+        drag_offscreen True
+        draggable True
         align (0.95, 0.1)
-        has vbox
-        spacing 6
 
-        text "Modo: [ 'Enfoque' if pomodoro_mode == 'focus' else 'Descanso largo' if pomodoro_mode == 'long_break' else 'Descanso corto' ]" size 24
-        text pomodoro_time_display() size 40 xalign 0.5
-        text "Ciclos completados: [pomodoro_cycles]" size 18
+        frame:
+            has vbox
+            spacing 6
 
-        hbox:
-            spacing 8
-            textbutton ("Reanudar" if pomodoro_running else "Iniciar") action Function(pomodoro_toggle)
-            textbutton "Reiniciar" action Function(pomodoro_reset)
-            textbutton "Omitir" action Function(pomodoro_skip_phase)
+            text "Modo: [ 'Enfoque' if pomodoro_mode == 'focus' else 'Descanso largo' if pomodoro_mode == 'long_break' else 'Descanso corto' ]" size 24
+            text pomodoro_time_display() size 40 xalign 0.5
+            text "Ciclos completados: [pomodoro_cycles]" size 18
+
+            hbox:
+                spacing 8
+                textbutton ("Pausar" if pomodoro_running else "Iniciar" if pomodoro_time_remaining == pomodoro_duration_for_mode(pomodoro_mode) else "Reanudar") action Function(pomodoro_toggle)
+                textbutton "Reiniciar" action Function(pomodoro_reset)
+                textbutton "Omitir" action Function(pomodoro_skip_phase)
 
     if pomodoro_running:
         timer 1.0 action Function(pomodoro_tick) repeat True
+
+
+screen todo_overlay():
+    zorder 100
+    drag:
+        drag_name "todo_panel"
+        drag_offscreen True
+        draggable True
+        align (0.05, 0.1)
+
+        frame:
+            xmaximum 400
+            has vbox
+            spacing 10
+
+            label "Lista de Tareas" xalign 0.5
+
+            viewport:
+                ysize 300
+                scrollbars "vertical"
+                mousewheel True
+                draggable True
+                
+                vbox:
+                    spacing 5
+                    for i, task in enumerate(todo_list):
+                        hbox:
+                            spacing 10
+                            textbutton ("X" if task["done"] else "O"):
+                                action Function(toggle_task, i)
+                                xsize 40
+                            
+                            text task["title"]:
+                                strikethrough task["done"]
+                                yalign 0.5
+                                size 20
+                            
+                            textbutton "Borrar":
+                                action Function(delete_task, i)
+                                xalign 1.0
+                                text_size 15
+
+            hbox:
+                spacing 5
+                input value VariableInputValue("new_task_text") length 30
+                textbutton "Añadir" action Function(add_task_from_input)
+
+
+screen main_hold():
+    # Pantalla vacía para mantener el juego corriendo sin loop infinito
+    pass
 
 
 ## Pantalla de menú ############################################################

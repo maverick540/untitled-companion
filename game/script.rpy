@@ -12,6 +12,10 @@ default pomodoro_time_remaining = pomodoro_focus_duration
 default pomodoro_running = False
 default pomodoro_cycles = 0
 
+# Variables del sistema TODO
+default todo_list = []
+default new_task_text = ""
+
 default player_name = ""
 
 init python:
@@ -56,6 +60,23 @@ init python:
         seconds = int(store.pomodoro_time_remaining % 60)
         return f"{minutes:02d}:{seconds:02d}"
 
+    # Funciones para la lista de tareas
+    def add_task(title):
+        if title.strip():
+            store.todo_list.append({"title": title, "done": False})
+
+    def toggle_task(index):
+        if 0 <= index < len(store.todo_list):
+            store.todo_list[index]["done"] = not store.todo_list[index]["done"]
+
+    def delete_task(index):
+        if 0 <= index < len(store.todo_list):
+            store.todo_list.pop(index)
+
+    def add_task_from_input():
+        add_task(store.new_task_text)
+        store.new_task_text = ""
+
 
 #######################
 #  FLUJO DEL JUEGO    #
@@ -71,6 +92,7 @@ label start:
     show eileen happy
 
     show screen pomodoro_overlay
+    show screen todo_overlay
 
     call intro_dialog
 
@@ -93,6 +115,9 @@ label intro_dialog:
 
     luna "Ahora respira profundo, alinea tu espalda, y dime qué misión dominarás hoy. ¡Estoy a tu lado, [player_name]!"
 
+    # >>> OCULTAR EL PANEL DE DIÁLOGO <<<
+    window hide
+
     return
 
 
@@ -101,14 +126,10 @@ label intro_dialog:
 #########################
 
 label main_loop:
-
-    # Este pause hace que el juego siga corriendo sin salir al menú.
-    $ renpy.pause(0.1, hard=True)
-
-    # En el futuro puedes poner aquí cosas como:
-    # - Diálogos automáticos de motivación
-    # - Eventos al completar ciclos
-    # - Comentarios de Luna según el modo
-    # - Integraciones externas
+    
+    # Llamamos a una pantalla vacía que no hace nada más que esperar.
+    # Esto evita el error de loop infinito y mantiene el juego corriendo
+    # mientras los overlays (pomodoro, todo) siguen funcionando.
+    call screen main_hold
 
     jump main_loop
