@@ -217,6 +217,8 @@ screen pomodoro_overlay():
                 textbutton ("Pausar" if pomodoro_running else "Iniciar" if pomodoro_time_remaining == pomodoro_duration_for_mode(pomodoro_mode) else "Reanudar") action Function(pomodoro_toggle)
                 textbutton "Reiniciar" action Function(pomodoro_reset)
                 textbutton "Omitir" action Function(pomodoro_skip_phase)
+            
+            textbutton "Hablar" action Jump("talk_selection") xalign 0.5
 
     if pomodoro_running:
         timer 1.0 action Function(pomodoro_tick) repeat True

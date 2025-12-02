@@ -133,3 +133,27 @@ label main_loop:
     call screen main_hold
 
     jump main_loop
+
+
+label talk_selection:
+    window show
+    menu:
+        "Necesito motivación":
+            jump talk_motivation
+        "Cuéntame sobre ti":
+            jump talk_about_luna
+        "Volver":
+            window hide
+            jump main_loop
+
+label talk_motivation:
+    luna "¡Tú puedes con todo, [player_name]! Recuerda por qué empezaste."
+    luna "Cada pequeño paso cuenta. ¡Sigue así!"
+    window hide
+    jump main_loop
+
+label talk_about_luna:
+    luna "Soy una entidad digital creada para ayudarte a ser tu mejor versión."
+    luna "Me alimento de tu productividad y de tus descansos bien merecidos."
+    window hide
+    jump main_loop
