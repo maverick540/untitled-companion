@@ -275,6 +275,39 @@ screen main_hold():
     pass
 
 
+screen radio_overlay():
+    on "show" action Function(radio_scan_files)
+    zorder 100
+    drag:
+        drag_name "radio_panel"
+        drag_offscreen True
+        draggable True
+        align (0.5, 0.9)
+
+        frame:
+            xmaximum 300
+            has vbox
+            spacing 5
+
+            label "Lo-Fi Radio" xalign 0.5
+
+            if radio_stations:
+                text radio_stations[current_station_index]['name'] xalign 0.5 size 18 color "#aaa"
+            else:
+                text "No stations found" xalign 0.5
+                text "Path: [config.gamedir]/audio/radios" size 10 xalign 0.5
+                textbutton "Rescan" action Function(radio_scan_files) xalign 0.5
+
+            hbox:
+                xalign 0.5
+                spacing 20
+                textbutton "<" action Function(radio_prev)
+                textbutton ("||" if radio_is_playing else ">") action Function(radio_toggle)
+                textbutton ">" action Function(radio_next)
+            
+            bar value Preference("music volume") xsize 200 xalign 0.5
+
+
 ## Pantalla de menú ############################################################
 ##
 ## Esta pantallla presenta las opciones internas al juego de la sentencia
@@ -324,15 +357,6 @@ screen quick_menu():
         hbox:
             style_prefix "quick"
             style "quick_menu"
-
-            textbutton _("Atrás") action Rollback()
-            textbutton _("Historial") action ShowMenu('history')
-            textbutton _("Saltar") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Guardar") action ShowMenu('save')
-            textbutton _("Guardar R.") action QuickSave()
-            textbutton _("Cargar R.") action QuickLoad()
-            textbutton _("Prefs.") action ShowMenu('preferences')
 
 
 ## Este código asegura que la pantalla 'quick_menu' se muestra en el juego,
@@ -1611,11 +1635,6 @@ screen quick_menu():
         hbox:
             style "quick_menu"
             style_prefix "quick"
-
-            textbutton _("Atrás") action Rollback()
-            textbutton _("Saltar") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Menú") action ShowMenu()
 
 
 style window:

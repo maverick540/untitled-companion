@@ -8,7 +8,7 @@ TARGET_HEIGHT = 720  # Solo fijamos la altura
 
 def is_bg_file(filename):
     lower = filename.lower()
-    return (lower.startswith("sprite") or lower.startswith("eileen")) and lower.endswith((".png", ".jpg", ".jpeg", ".webp"))
+    return (lower.startswith("sprite") or lower.startswith("luna")) and lower.endswith((".png", ".jpg", ".jpeg", ".webp"))
 
 def resize_image(path):
     try:
